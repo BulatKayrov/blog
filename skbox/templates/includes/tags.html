@@ -1,0 +1,13 @@
+{% load tags %}
+
+
+<div>
+
+    <h3>Теги</h3>
+    {% tag_list as tags %}
+    {% for tag in tags %}
+    	<p><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></p>
+    {% endfor %}
+
+</div>
+

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+</head>
+<body>
+<h1>{{ post.title }}</h1>
+
+{% include 'includes/nav.html' %}
+<br>
+{% include 'includes/category.html' %}
+<br>
+{% include 'includes/tags.html' %}
+
+<div>
+    <h2>{{ post.title }}</h2>
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 350px">
+    <p>Название статьи: {{ post.title }}</p>
+    <p>Дата публикации: {{ post.created }}</p>
+    <p>Автор статьи: {{ post.author }}</p>
+    <p>Теги:
+        {% for tag in post.tags.all %}
+            <a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
+        {% endfor %}
+    </p>
+</div>
+<div>
+    {% if post.comment %}
+        <h3>Комментарии</h3>
+        {% for comment in post.comment.all %}
+            <div>
+                <p>Автор: {{ comment.author }}</p>
+                <p>Дата: {{ comment.created }}</p>
+                <p>Текст: {{ comment.text }}</p>
+                <hr>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3>Комментарий нету</h3>
+    {% endif %}
+</div>
+
+<div>
+    <form action="{% url 'blog:detail' post.slug %}" method="post">
+        {% csrf_token %}
+        {{ form.text }}
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+
+</body>
+</html>

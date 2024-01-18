@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% include 'includes/nav.html' %}
+
+<div>
+    <h3>Sing UP</h3>
+    <form action="{% url 'users:register' %}" method="post">
+        {% csrf_token %}
+        <p>Username: {{ form.username }}</p>
+        <p>Email: {{ form.email }}</p>
+        <p>Password: {{ form.password1 }}</p>
+        <p>Confirm password: {{ form.password2 }}</p>
+        <button type="submit">Register</button>
+    </form>
+    <hr>
+    <a href="{% url 'users:login' %}">Sing in</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+{% include 'includes/nav.html' %}
+<br>
+{% include 'includes/category.html' %}
+<br>
+{% include 'includes/tags.html' %}
+<br>
+<div>
+    {% for post in posts %}
+
+        <hr>
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 350px">
+        <p>Автор: {{ post.author }}</p>
+        <p>Дата создания: {{ post.created }}</p>
+        <p>Название: <a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+        <p>Статья: {{ post.body }}</p>
+        <p>Теги:
+            {% if post.tags %}
+                {% for foo in post.tags.all %}
+                    <a href="{{ foo.get_absolute_url }}">{{ foo.name }}</a>
+                {% endfor %}
+            {% endif %}
+        </p>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

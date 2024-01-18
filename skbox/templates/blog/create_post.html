@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create POst</title>
+</head>
+<body>
+
+{% include 'includes/nav.html' %}
+<br>
+{% include 'includes/category.html' %}
+<br>
+{% include 'includes/tags.html' %}
+<br>
+<hr>
+<form action="#" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>Изображение: {{ form.image }}</p>
+    <p>Название: {{ form.title }}</p>
+    <p>Текст: {{ form.body }}</p>
+    <p>Категория: {{ form.category }}</p>
+    <p>Теги: {{ form.tags }}</p>
+    <button type="submit">Create</button>
+</form>
+<br>
+<br>
+<br>
+<br>
+
+
+
+</body>
+</html>
