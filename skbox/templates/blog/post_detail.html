@@ -42,11 +42,19 @@
 </div>
 
 <div>
-    <form action="{% url 'blog:detail' post.slug %}" method="post">
-        {% csrf_token %}
-        {{ form.text }}
-        <button type="submit">Отправить</button>
-    </form>
+    {% if request.user.is_authenticated %}
+        <div>
+            <form action="{% url 'blog:detail' post.slug %}" method="post">
+                {% csrf_token %}
+                <p>Author: <em>{{ request.user.username }}</em></p>
+                {{ form.as_p }}
+                <button type="submit">Отправить</button>
+            </form>
+        </div>
+    {% else %}
+        <p><em><a href="{% url 'users:login' %}">Авторизуйтесь</a></em> на сайте, чтобы оставлять комментарии</p>
+    {% endif %}
+
 </div>
 
 </body>
