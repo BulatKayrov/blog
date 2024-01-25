@@ -12,6 +12,7 @@ from .utils import slugify, get_post_in_cache, get_in_cache_name_post
 class PostListView(ListView):
     context_object_name = 'posts'
     template_name = 'blog/index.html'
+    paginate_by = 1
 
     def queryset(self):
         return get_post_in_cache()
@@ -61,9 +62,8 @@ class PostCreateView(CreateView):
     success_url = reverse_lazy('blog:index')
 
     def form_valid(self, form):
-        form = super(PostCreateView, self).form_valid(form)
-        form.author = self.request.user
-        return form
+        form.instance.author = self.request.user
+        return super(PostCreateView, self).form_valid(form)
 
 
 # def post_detail(request, slug_post=None):

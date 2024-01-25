@@ -73,9 +73,10 @@ docs/_build/
 target/
 
 # Virtual environment
-skbox/.env/
+.env
 .venv/
 venv/
+.gitignore
 
 # PyCharm
 .idea

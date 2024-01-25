@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('blog.urls', namespace='blog')),
     path('users/', include('users.urls', namespace='users')),
     path("__debug__/", include("debug_toolbar.urls")),
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

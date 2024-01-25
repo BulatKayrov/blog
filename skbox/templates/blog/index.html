@@ -30,6 +30,20 @@
         </p>
     {% endfor %}
 
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+        {% endif %}
+    
+        {% for paginator in paginator.page_range %}
+            <a href="?page={{ paginator }}">{{ paginator }}</a>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+        {% endif %}
+    </div>
+
 </div>
 
 </body>

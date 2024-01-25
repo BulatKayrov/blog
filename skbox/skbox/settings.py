@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
 
+from django.urls import reverse
+
 from .config import (
     EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, SECRET_KEY,
-    DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
+    DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DJANGO_DEBUG, DB_PORT,
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -13,9 +15,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DJANGO_DEBUG == "1"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "0.0.0.0",
+]
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -30,6 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    
 
     "debug_toolbar",
 
@@ -46,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'skbox.urls'
@@ -74,12 +89,16 @@ WSGI_APPLICATION = 'skbox.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # local
+
+
+        # 'ENGINE': 'django.db.backends.postgresql',  # docker
+        'HOST': DB_HOST,
         'NAME': DB_NAME,
         'USER': DB_USER,
         'PASSWORD': DB_PASSWORD,
-        'HOST': DB_HOST,
-        'PORT': DB_PORT
+
+        'PORT': DB_PORT,  # local
     }
 }
 
@@ -125,7 +144,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Send mail
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.yandex.ru'
@@ -135,15 +153,15 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = EMAIL_HOST_USER  # username
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD  # password
 
-# REdis
+# Redis
 
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
+        "LOCATION": f"redis://redis:{REDIS_PORT}/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -157,3 +175,25 @@ CELERY_BROKER_TRANSPORT_OPTION = {'visibility_timeout': 3600}
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+# OAuth
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'SCOPE': [
+            'user',
+            'repo',
+            'read:org',
+        ],
+    }
+}
+
+# Users
+
+LOGIN_URL = 'users/login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = LOGIN_URL
